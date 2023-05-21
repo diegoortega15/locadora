@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import br.com.locadora.model.Carro;
 import br.com.locadora.model.Cliente;
+import br.com.locadora.model.ItemAdicional;
 import br.com.locadora.model.Locacao;
 import br.com.locadora.model.LocalRetirada;
 import br.com.locadora.model.Marca;
@@ -25,6 +26,7 @@ import br.com.locadora.model.Modelo;
 import br.com.locadora.model.Usuario;
 import br.com.locadora.service.CarroService;
 import br.com.locadora.service.ClienteService;
+import br.com.locadora.service.ItemAdicionalService;
 import br.com.locadora.service.LocacaoService;
 import br.com.locadora.service.LocalRetiradaService;
 import br.com.locadora.service.MarcaService;
@@ -51,6 +53,9 @@ public class LocacaoController {
 
 	@Autowired
 	private LocalRetiradaService localRetiradaService;
+	
+	@Autowired
+	private ItemAdicionalService itemAdicionalService;
 
 	public LocacaoController() {
 	}
@@ -80,7 +85,8 @@ public class LocacaoController {
 		List<Marca> marcas = marcaService.pesquisarMarcas();
 		List<Modelo> modelos = modeloService.pesquisarModelos();
 		List<LocalRetirada> locais = localRetiradaService.pesquisarLocalRetiradas();
-
+		List<ItemAdicional> itens = itemAdicionalService.pesquisarItemAdicionals();
+		
 		Long idCarro = Long.parseLong(request.getParameter("idCarro"));
 		Carro carro = carroService.pesquisarCarroPorId(idCarro);
 
@@ -88,7 +94,8 @@ public class LocacaoController {
 		model.addObject("marcas", marcas);
 		model.addObject("modelos", modelos);
 		model.addObject("locais", locais);
-
+		model.addObject("itens", itens);
+		
 		return model;
 	}
 
@@ -190,6 +197,22 @@ public class LocacaoController {
 		model.addObject("sucesso", true);
 		
 		return model;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/incluir-item", method = RequestMethod.GET)
+	public @ResponseBody String incluirItem(@RequestParam("item") String idItem) throws IOException {
+		
+		ItemAdicional itemAdicional = itemAdicionalService.pesquisarItemAdicionalPorId(Long.parseLong(idItem));
+		
+		JSONArray jsonArray = new JSONArray();
+		JSONObject jsonObject = new JSONObject();
+
+		jsonObject.put("nome", itemAdicional.getNome());
+		jsonObject.put("id", itemAdicional.getId());
+
+		jsonArray.add(jsonObject);
+		return jsonArray.toJSONString();
 	}
 	
 }

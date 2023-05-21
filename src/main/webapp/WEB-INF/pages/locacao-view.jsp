@@ -377,7 +377,22 @@
 							  		</div>
 							    	
 							  	</div>
-							  	
+
+								<table id="tabela" class="table table-striped">
+									<thead>
+										<tr>
+											<th width="100%">Item</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach var="itemVar" items="${locacao.itens}">
+											<tr>
+												<td>${itemVar.nome}</td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
+								
 							</form:form>
 																	
                         </div>

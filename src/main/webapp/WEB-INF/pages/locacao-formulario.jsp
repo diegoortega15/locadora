@@ -286,6 +286,9 @@
 								<input type="hidden" id="idCliente" name="cliente.id" value="${idCliente}" />
 								<input type="hidden" id="idCarro" name="carro.id" value="${carro.id}" />
 								
+								<input type="hidden" id="idsItens" name="idsItens" >
+								<input type="hidden" id="idsItensExcluir" name="idsItensExcluir" >
+								
 								<h5>Dados do Carro</h5>
 								
 								<div class="form-row">
@@ -397,6 +400,45 @@
 							    	
 							  	</div>
 							  	
+							  	<div class="form-row">
+							  		
+							    	<div class="form-group col-md-10">
+							  			<label for="modelo">Item Adicional</label> 
+										<select class="form-control" id="select-item" name="idItem" >
+											<option value="">Selecione um item adicional</option>
+											<c:forEach var="itemVar" items="${itens}">
+												<option value="${itemVar.id}">${itemVar.nome}</option>
+											</c:forEach>
+										</select>
+							  		</div>
+							  		
+							  		<div class="col-md-2">
+										<div class="form-outline">
+											<label class="form-label" for="comentario">&nbsp;</label> 
+											<a class="form-control btn btn-outline-secondary" href="#" onclick="javascript:incluir();" role="button">Incluir</a>
+										</div>
+									</div>
+							    	
+							  	</div>
+							  	
+							  	<hr>
+								<table id="tabela" class="table table-striped">
+									<thead>
+										<tr>
+											<th width="90%">Item</th>
+											<th width="10%">Ações</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach var="itemVar" items="${locacao.itens}">
+											<tr>
+												<td>${itemVar.nome}</td>
+												<td><a class="form-control btn btn-sm btn-outline-secondary" href="#" onclick="javascript:excluir(this, ${itemVar.id});" role="button">Excluir</a></td>
+											</tr>
+										</c:forEach>
+									</tbody>
+								</table>
+							  	
 							  	<div class="card-footer">
 									<button type="submit" class="btn btn-sm btn-primary">Salvar</button>
 									<a class="btn btn-sm btn-secondary" href="/locadora/reserva/listar-carros" role="button">Cancelar</a>
@@ -483,6 +525,9 @@
 	
 		$('[data-mask]').inputmask()
 		
+		var itens = [];	
+		var itensExcluir = [];
+		
 		$( '#select-carro' ).select2( {
 		    theme: "bootstrap-5",
 			    width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
@@ -528,6 +573,54 @@
 			}
 			
 		}
+		
+        function incluir() {
+	
+			if (document.getElementById('select-item').value != "") {
+				
+				itens.push(document.getElementById('select-item').value);
+				
+				var param = 'item=' + encodeURIComponent(document.getElementById('select-item').value);
+				
+				$.ajax({
+		            url : "/locadora/locacao/incluir-item",
+		            data : param,
+		            dataType : "JSON",
+		            type : "GET",
+			
+		            success : function(response) {
+		            	var table = document.getElementById("tabela");
+		    			var row = table.insertRow(1);
+		    			var cell1 = row.insertCell(0);
+		    			var cell2 = row.insertCell(1);
+		    			
+		    			cell1.innerHTML = response[0].nome;
+		    			cell2.innerHTML = '<a class="form-control btn btn-sm btn-outline-secondary" href="#" onclick="javascript:excluir(this, ' + response[0].id + ');" role="button">Excluir</a>';
+		    			
+		    			document.getElementById("select-item").value = "";
+						
+		    			document.getElementById('idsItens').value = itens;
+		    			
+		            },
+		            error : function(xhr, status, error) {
+		                alert("ERRO: " + xhr.responseText);
+		            }
+		        });
+			} 
+		}
+        
+		function excluir(value, item) {
+			
+			if (item != "") {
+				
+            	var index = value.parentNode.parentNode.rowIndex;
+    			document.getElementById("tabela").deleteRow(index);
+    			
+    			itensExcluir.push(item);
+    			document.getElementById('idsItensExcluir').value = itensExcluir;
+			}
+		}
+        
 	</script>
 	
 </body>

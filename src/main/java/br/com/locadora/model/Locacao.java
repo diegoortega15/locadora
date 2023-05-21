@@ -75,6 +75,12 @@ public class Locacao {
 	@Transient
 	private String dataEntregaFormatada;
 
+	@Transient
+	private String idsItens;
+
+	@Transient
+	private String idsItensExcluir;
+
 	public Long getId() {
 		return id;
 	}
@@ -197,6 +203,22 @@ public class Locacao {
 
 	public void setItens(List<ItemAdicional> itens) {
 		this.itens = itens;
+	}
+
+	public String getIdsItens() {
+		return idsItens;
+	}
+
+	public void setIdsItens(String idsItens) {
+		this.idsItens = idsItens;
+	}
+
+	public String getIdsItensExcluir() {
+		return idsItensExcluir;
+	}
+
+	public void setIdsItensExcluir(String idsItensExcluir) {
+		this.idsItensExcluir = idsItensExcluir;
 	}
 
 }

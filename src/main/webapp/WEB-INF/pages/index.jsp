@@ -68,7 +68,7 @@
 										
 										<div class="form-group">
 											<input type="text" class="form-control form-control-user" id="exampleInputEmail" name="login"
-												aria-describedby="emailHelp" placeholder="E-mail" required="required">
+												aria-describedby="emailHelp" placeholder="Login" required="required">
 										</div>
 										<div class="form-group">
 											<input type="password" class="form-control form-control-user" id="exampleInputPassword" name="senha"

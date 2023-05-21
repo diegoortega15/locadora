@@ -43,6 +43,10 @@ public class LocacaoDAOImpl implements LocacaoDAO {
 		criteria.add(Restrictions.eq("id", idLocacao));
 
 		Locacao locacao = (Locacao) criteria.uniqueResult();
+		
+		if (locacao != null) 
+			Hibernate.initialize(locacao.getItens());
+		
 		return locacao;
 	}
 
